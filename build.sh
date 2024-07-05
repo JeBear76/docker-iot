@@ -1,5 +1,7 @@
-for src in iotAngular/dist/iot-angular/*.*s; do
+cp angular-dist/browser/*.*s iotServer/static/
+
+for src in iotServer/static/*.*s; do
   dest=$(echo $src | sed "s/\\-[0-9a-zA-Z]*\\././")
-  mv $src iotServer/static/$dest
+  mv $src $dest
 done
 
