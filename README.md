@@ -1,7 +1,10 @@
 # Docker IoT Thing
 
+(EC2 IoT Tutorial Used)[https://docs.aws.amazon.com/iot/latest/developerguide/creating-a-virtual-thing.html]
+(Django-Angular Tutorial used)[https://devarea.com/building-a-web-app-with-angular-django-and-django-rest/]
 ## Setup IoT Thing
 ### Basic Thing Setup
+
 ```
 mkdir ~/certs
 
@@ -21,3 +24,7 @@ aws iot create-policy \
     --policy-name "MyIotThingPolicy" \
     --policy-document "file://./config/policy.json"
 ```
+## Django setup
+
+
+## Angular Setup
