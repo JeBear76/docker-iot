@@ -1,4 +1,4 @@
-cp angular-dist/browser/*.*s iotServer/static/
+cp angular-dist/browser/*.*s iotServer/iotServer/static/
 
 for src in iotServer/static/*.*s; do
   dest=$(echo $src | sed "s/\\-[0-9a-zA-Z]*\\././")
