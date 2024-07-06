@@ -42,17 +42,14 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 WORKDIR /app/certs
-COPY --chmod=777 /certs .
+COPY --chmod=777 ./certs .
 
 WORKDIR /app
-COPY /app .
-
-RUN ls -la
+COPY ./app .
 
 # Expose the port that the application listens on.
 EXPOSE 8000
-EXPOSE 1221
 
 # Run the application.
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD ls ./certs & python ./app.py
+# CMD ls -R 
+CMD python ./app.py
