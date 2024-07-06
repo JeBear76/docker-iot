@@ -9,14 +9,16 @@
 # https://github.com/docker/awesome-compose
 services:
   websocket:
-    build: ./iot-app      
+    container_name: iot-monitor
+    build: ./iot-app
     ports:
       - 8000:8000
 
   angular:
+    container_name: iot-angular
     build: ./angular-dist
     ports:
-      - 4200:4200
+      - 8080:8080
 
 networks:
   default:
