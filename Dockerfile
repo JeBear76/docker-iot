@@ -45,11 +45,13 @@ WORKDIR /app/certs
 COPY --chmod=777 /certs .
 
 WORKDIR /app
-COPY /iotServer .
+COPY /app .
+# COPY /iotServer .
+
 
 # Expose the port that the application listens on.
 EXPOSE 8000
 
 # Run the application.
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ls ./certs & python ./app.py
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ls ./certs & python ./app.py

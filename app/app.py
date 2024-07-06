@@ -8,8 +8,7 @@ import threading
 import time
 import json
 
-received_count = 0
-received_all_event = threading.Event()
+# received_all_event = threading.Event()
 
 # Callback when connection is accidentally lost.
 def on_connection_interrupted(connection, error, **kwargs):
@@ -40,11 +39,8 @@ def on_resubscribe_complete(resubscribe_future):
 
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
-    print("Received message from topic '{}': {}".format(topic, payload))
-    global received_count
-    received_count += 1
-    if received_count == 10:
-        received_all_event.set()
+    print("Received message from topic '{}': {}".format(topic, payload))    
+    #received_all_event.set()
 
 # Callback when the connection successfully connects
 def on_connection_success(connection, callback_data):
@@ -60,6 +56,14 @@ def on_connection_failure(connection, callback_data):
 def on_connection_closed(connection, callback_data):
     print("Connection closed")
 
+def send_message(mqtt_connection, message_topic, message_string):
+    message = "{}".format(message_string)
+    print("Publishing message to topic '{}': {}".format(message_topic, message))
+    mqtt_connection.publish(
+        topic=message_topic,
+        payload=message,
+        qos=mqtt.QoS.AT_LEAST_ONCE)
+    
 if __name__ == '__main__':
     # Create a MQTT connection from the command line data
     mqtt_connection = mqtt_connection_builder.mtls_from_path(
@@ -89,7 +93,6 @@ if __name__ == '__main__':
 
     message_count = 10
     message_topic = 'docker-iot-thing-topic'
-    message_string = 'How about that?'
 
     # Subscribe
     print("Subscribing to topic '{}'...".format(message_topic))
@@ -101,34 +104,8 @@ if __name__ == '__main__':
     subscribe_result = subscribe_future.result()
     print("Subscribed with {}".format(str(subscribe_result['qos'])))
 
-    # Publish message to server desired number of times.
-    # This step is skipped if message is blank.
-    # This step loops forever if count was set to 0.
-    if message_string:
-        if message_count == 0:
-            print("Sending messages until program killed")
-        else:
-            print("Sending {} message(s)".format(message_count))
-
-        publish_count = 1
-        while (publish_count <= message_count) or (message_count == 0):
-            message = "{} [{}]".format(message_string, publish_count)
-            print("Publishing message to topic '{}': {}".format(message_topic, message))
-            message_json = json.dumps(message)
-            mqtt_connection.publish(
-                topic=message_topic,
-                payload=message_json,
-                qos=mqtt.QoS.AT_LEAST_ONCE)
-            time.sleep(1)
-            publish_count += 1
-
-    # Wait for all messages to be received.
-    # This waits forever if count was set to 0.
-    if message_count != 0 and not received_all_event.is_set():
-        print("Waiting for all messages to be received...")
-
-    received_all_event.wait()
-    print("{} message(s) received.".format(received_count))
+    while True:
+        pass
 
     # Disconnect
     print("Disconnecting...")
