@@ -10,12 +10,13 @@ FROM nginxinc/nginx-unprivileged
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copy the rest of the source files into the image.
+COPY ./dist/browser /usr/share/nginx/html
+
 # Run the application as a non-root user.
 WORKDIR /certs
 COPY --chmod=777 ./certs .
 
-# Copy the rest of the source files into the image.
-COPY ./dist/browser/ /usr/share/nginx/html
 
 EXPOSE 3000
 
