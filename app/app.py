@@ -1,6 +1,8 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0.
 
+import asyncio
+import websockets
 from awscrt import mqtt, http
 from awsiot import mqtt_connection_builder
 import sys
@@ -8,6 +10,8 @@ import threading
 import time
 import json
 
+
+connected = list()
 # received_all_event = threading.Event()
 
 # Callback when connection is accidentally lost.
@@ -39,7 +43,17 @@ def on_resubscribe_complete(resubscribe_future):
 
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
-    print("Received message from topic '{}': {}".format(topic, payload))    
+    reply = "Received message from topic '{}': {}".format(topic, payload)
+    print(reply)    
+    print(f'Connected: {len(connected)}')
+    for conn in connected:
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            asyncio.run(conn.send(reply))
+        else:
+            loop.run_until_complete(conn.send(reply))
+        
     #received_all_event.set()
 
 # Callback when the connection successfully connects
@@ -63,7 +77,25 @@ def send_message(mqtt_connection, message_topic, message_string):
         topic=message_topic,
         payload=message,
         qos=mqtt.QoS.AT_LEAST_ONCE)
-    
+
+# create handler for each connection
+async def handler(websocket, path):
+    if websocket not in connected:
+        connected.append(websocket)
+    while True:
+        try:
+            data = await websocket.recv()
+        except websockets.ConnectionClosedOK:
+            print ("Connection closed")
+        reply = f"Data recieved as:  {data}!"
+        print(reply)
+        for conn in connected:
+            await conn.send(reply)
+
+async def webSocketMain():
+    async with websockets.serve(handler, "0.0.0.0", 8000):
+        await asyncio.Future()
+
 if __name__ == '__main__':
     # Create a MQTT connection from the command line data
     mqtt_connection = mqtt_connection_builder.mtls_from_path(
@@ -104,11 +136,10 @@ if __name__ == '__main__':
     subscribe_result = subscribe_future.result()
     print("Subscribed with {}".format(str(subscribe_result['qos'])))
 
-    while True:
-        pass
+    asyncio.run(webSocketMain())
 
-    # Disconnect
-    print("Disconnecting...")
-    disconnect_future = mqtt_connection.disconnect()
-    disconnect_future.result()
-    print("Disconnected!")
+    # # Disconnect
+    # print("Disconnecting...")
+    # disconnect_future = mqtt_connection.disconnect()
+    # disconnect_future.result()
+    # print("Disconnected!")

@@ -1,10 +1,2 @@
 awsiotsdk
-django
-gunicorn
-dj-database-url
-whitenoise
-psycopg2-binary
-channels
-channels-redis
-djangorestframework
-djangorestframework-simplejwt
+websockets
