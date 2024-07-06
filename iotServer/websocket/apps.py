@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class IotappConfig(AppConfig):
+class WebsocketConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'iotApp'
+    name = 'websocket'
