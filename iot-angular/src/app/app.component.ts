@@ -8,6 +8,8 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
   title = 'iot-angular';
+  version = '1.0.0';
 }
