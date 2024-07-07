@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { WebSocketService } from '../websocket.service';
 import { CommonModule } from '@angular/common';
@@ -16,20 +17,21 @@ import { CommonModule } from '@angular/common';
     MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     FormsModule
   ],
   templateUrl: './iot-listener.component.html',
   styleUrl: './iot-listener.component.css'
 })
-export class IotListenerComponent{
+export class IotListenerComponent {
   /**
    *
    */
   messages: string[] = [];
   newMessage: string = "";
-  constructor(private websocketService: WebSocketService) { 
+  constructor(private websocketService: WebSocketService) {
     websocketService.linkToSocket().subscribe({
-      next: (msg:string) => { 
+      next: (msg: string) => {
         console.log('message received: ' + msg);
         this.messages.push(msg);
       },

@@ -1,7 +1,14 @@
 <mat-toolbar color="primary">
-    Message Reader
-  </mat-toolbar>
-  
+  Message Reader
+</mat-toolbar>
+<div class="container">
+
+  <div class="description">
+    <p>
+      Message Reader attaches to a docker IoT device and receives messages from it.
+    </p>
+  </div>
+
   <mat-card>
     <div class="message-pane">
       <div class="message-content">
@@ -10,13 +17,18 @@
       </div>
     </div>
   </mat-card>
-  
+  <br />
+
   <mat-card>
     <div class="input-area">
-      <mat-form-field class="example-full-width">
-        <input matInput placeholder="Type your message" [(ngModel)]="newMessage">
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
+      <div class="input-container">
+        <mat-form-field>
+          <input matInput placeholder="Type your message" [(ngModel)]="newMessage">
+          <button mat-button matSuffix color="primary" (click)="sendMessage()">Send</button>
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary">Do Stuff</button>
     </div>
   </mat-card>
-  
+</div>
