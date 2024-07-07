@@ -24,6 +24,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './iot-listener.component.css'
 })
 export class IotListenerComponent {
+  sendAction() {
+    this.websocketService.subject.next('{"op":"activate"}');
+  }
   /**
    *
    */
