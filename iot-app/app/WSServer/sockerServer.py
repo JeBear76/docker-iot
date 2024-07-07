@@ -37,6 +37,11 @@ class socketServer:
                     if self.actionObserver is not None:
                         self.actionObserver.sendAction(data)                    
                     reply = f"Sent message to topic 'docker-iot-thing-outtopic': {data}"
+                if 'askOllama' in json_data:
+                    if self.actionObserver is not None:
+                        reply = self.actionObserver.askOllama(json_data['askOllama'])
+                    else:
+                        reply = "Ollama is not available"
 
             except json.JSONDecodeError:
                 pass
