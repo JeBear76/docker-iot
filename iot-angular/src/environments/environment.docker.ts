@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    wsUrl: 'ws://iot-monitor:8000'
+    wsUrl: 'ws://localhost:8000'
 };
