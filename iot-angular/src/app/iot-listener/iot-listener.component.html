@@ -25,9 +25,9 @@
         <mat-form-field>
           <input matInput placeholder="Type your message" [(ngModel)]="newMessage">
           <button mat-button matSuffix color="primary" (click)="sendMessage()">Send</button>
-          <button mat-raised-button color="primary" (click)="sendOllamaQuestion()">Ask Ollama</button>
         </mat-form-field>
       </div>
+      <button mat-raised-button color="primary" (click)="sendOllamaQuestion()">Ask Ollama</button>
       
       <button mat-raised-button color="primary" (click)="sendAction()">Do Stuff</button>
     </div>

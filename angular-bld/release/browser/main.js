@@ -22245,7 +22245,7 @@ var _IotListenerComponent = class _IotListenerComponent {
 _IotListenerComponent.\u0275fac = function IotListenerComponent_Factory(t) {
   return new (t || _IotListenerComponent)(\u0275\u0275directiveInject(WebSocketService));
 };
-_IotListenerComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _IotListenerComponent, selectors: [["app-iot-listener"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 20, vars: 2, consts: [["color", "primary"], [1, "container"], [1, "description"], [1, "message-pane"], [1, "message-content"], [4, "ngFor", "ngForOf"], [1, "input-area"], [1, "input-container"], ["matInput", "", "placeholder", "Type your message", 3, "ngModelChange", "ngModel"], ["mat-button", "", "matSuffix", "", "color", "primary", 3, "click"], ["mat-raised-button", "", "color", "primary", 3, "click"]], template: function IotListenerComponent_Template(rf, ctx) {
+_IotListenerComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _IotListenerComponent, selectors: [["app-iot-listener"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 22, vars: 2, consts: [["color", "primary"], [1, "container"], [1, "description"], [1, "message-pane"], [1, "message-content"], [4, "ngFor", "ngForOf"], [1, "input-area"], [1, "input-container"], ["matInput", "", "placeholder", "Type your message", 3, "ngModelChange", "ngModel"], ["mat-button", "", "matSuffix", "", "color", "primary", 3, "click"], ["mat-raised-button", "", "color", "primary", 3, "click"]], template: function IotListenerComponent_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "mat-toolbar", 0);
     \u0275\u0275text(1, " Message Reader\n");
@@ -22271,9 +22271,15 @@ _IotListenerComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ 
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(18, "button", 10);
     \u0275\u0275listener("click", function IotListenerComponent_Template_button_click_18_listener() {
+      return ctx.sendOllamaQuestion();
+    });
+    \u0275\u0275text(19, "Ask Ollama");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(20, "button", 10);
+    \u0275\u0275listener("click", function IotListenerComponent_Template_button_click_20_listener() {
       return ctx.sendAction();
     });
-    \u0275\u0275text(19, "Do Stuff");
+    \u0275\u0275text(21, "Do Stuff");
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
