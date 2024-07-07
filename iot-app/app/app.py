@@ -1,6 +1,8 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0.
 
+import asyncio
+import websockets
 from awscrt import mqtt, http
 from awsiot import mqtt_connection_builder
 import sys
@@ -8,17 +10,21 @@ import threading
 import time
 import json
 
-received_count = 0
-received_all_event = threading.Event()
+
+connected = list()
+# received_all_event = threading.Event()
 
 # Callback when connection is accidentally lost.
+
+
 def on_connection_interrupted(connection, error, **kwargs):
     print("Connection interrupted. error: {}".format(error))
 
 
 # Callback when an interrupted connection is re-established.
 def on_connection_resumed(connection, return_code, session_present, **kwargs):
-    print("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
+    print("Connection resumed. return_code: {} session_present: {}".format(
+        return_code, session_present))
 
     if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
         print("Session did not persist. Resubscribing to existing topics...")
@@ -40,25 +46,90 @@ def on_resubscribe_complete(resubscribe_future):
 
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
-    print("Received message from topic '{}': {}".format(topic, payload))
-    global received_count
-    received_count += 1
-    if received_count == 10:
-        received_all_event.set()
+    reply = "Received message from topic '{}': {}".format(topic, payload)
+    print(reply)
+    print(f'Connected: {len(connected)}')
+    for conn in connected:
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            asyncio.run(conn.send(reply))
+        else:
+            loop.run_until_complete(conn.send(reply))
+
+    # received_all_event.set()
 
 # Callback when the connection successfully connects
+
+
 def on_connection_success(connection, callback_data):
     assert isinstance(callback_data, mqtt.OnConnectionSuccessData)
-    print("Connection Successful with return code: {} session present: {}".format(callback_data.return_code, callback_data.session_present))
+    print("Connection Successful with return code: {} session present: {}".format(
+        callback_data.return_code, callback_data.session_present))
 
 # Callback when a connection attempt fails
+
+
 def on_connection_failure(connection, callback_data):
     assert isinstance(callback_data, mqtt.OnConnectionFailureData)
     print("Connection failed with error code: {}".format(callback_data.error))
 
 # Callback when a connection has been disconnected or shutdown successfully
+
+
 def on_connection_closed(connection, callback_data):
+    connected.remove(connection)
     print("Connection closed")
+
+
+def send_message(mqtt_connection, message_topic, message_string):
+    message = "{}".format(message_string)
+    print("Publishing message to topic '{}': {}".format(message_topic, message))
+    mqtt_connection.publish(
+        topic=message_topic,
+        payload=message,
+        qos=mqtt.QoS.AT_LEAST_ONCE)
+
+# create handler for each connection
+
+
+async def handler(websocket, path):
+    if websocket not in connected:
+        connected.append(websocket)
+    while True:
+        try:
+            data = await websocket.recv()
+        except websockets.ConnectionClosedOK:
+            connected.remove(websocket)
+            print("Connection closed")
+        print(data)
+        reply = f"{data}"
+
+        try:
+            json_data = json.loads(data)
+            # Data is in JSON format
+            # Process the JSON data here
+            if 'op' in json_data:
+                send_message(mqtt_connection, 'docker-iot-thing-outtopic', data)
+                reply = f"Sent message to topic 'docker-iot-thing-outtopic': {data}"
+        except json.JSONDecodeError:
+            pass
+            # Data is not in JSON format
+            # Handle the non-JSON data here
+        print(reply)
+        for conn in connected:
+            try:
+                if conn == websocket:
+                    await conn.send(f"Me: {reply}")
+                    continue
+                await conn.send(reply)
+            except websockets.exceptions.ConnectionClosedError:
+                pass
+
+
+async def webSocketMain():
+    async with websockets.serve(handler, "0.0.0.0", 8000):
+        await asyncio.Future()
 
 if __name__ == '__main__':
     # Create a MQTT connection from the command line data
@@ -78,9 +149,8 @@ if __name__ == '__main__':
         on_connection_failure=on_connection_failure,
         on_connection_closed=on_connection_closed)
 
-
     print(f"Connecting to 'axpxhkmf6px2p-ats.iot.eu-west-1.amazonaws.com' with client ID 'docket-iot-thing-1'...")
-    
+
     connect_future = mqtt_connection.connect()
 
     # Future.result() waits until a result is available
@@ -89,7 +159,6 @@ if __name__ == '__main__':
 
     message_count = 10
     message_topic = 'docker-iot-thing-topic'
-    message_string = 'How about that?'
 
     # Subscribe
     print("Subscribing to topic '{}'...".format(message_topic))
@@ -101,37 +170,10 @@ if __name__ == '__main__':
     subscribe_result = subscribe_future.result()
     print("Subscribed with {}".format(str(subscribe_result['qos'])))
 
-    # Publish message to server desired number of times.
-    # This step is skipped if message is blank.
-    # This step loops forever if count was set to 0.
-    if message_string:
-        if message_count == 0:
-            print("Sending messages until program killed")
-        else:
-            print("Sending {} message(s)".format(message_count))
+    asyncio.run(webSocketMain())
 
-        publish_count = 1
-        while (publish_count <= message_count) or (message_count == 0):
-            message = "{} [{}]".format(message_string, publish_count)
-            print("Publishing message to topic '{}': {}".format(message_topic, message))
-            message_json = json.dumps(message)
-            mqtt_connection.publish(
-                topic=message_topic,
-                payload=message_json,
-                qos=mqtt.QoS.AT_LEAST_ONCE)
-            time.sleep(1)
-            publish_count += 1
-
-    # Wait for all messages to be received.
-    # This waits forever if count was set to 0.
-    if message_count != 0 and not received_all_event.is_set():
-        print("Waiting for all messages to be received...")
-
-    received_all_event.wait()
-    print("{} message(s) received.".format(received_count))
-
-    # Disconnect
-    print("Disconnecting...")
-    disconnect_future = mqtt_connection.disconnect()
-    disconnect_future.result()
-    print("Disconnected!")
+    # # Disconnect
+    # print("Disconnecting...")
+    # disconnect_future = mqtt_connection.disconnect()
+    # disconnect_future.result()
+    # print("Disconnected!")

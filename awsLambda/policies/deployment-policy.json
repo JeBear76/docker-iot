@@ -1,0 +1,51 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowDeployRole",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:UpdateRole",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:PassRole"
+            ],
+            "Resource": "arn:aws:iam::208600120751:role/*"
+        },
+        {
+            "Sid": "AllowCreatePolicy",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreatePolicy",
+                "iam:UpdatePolicy",
+                "iam:DeletePolicy",
+                "iam:AttachUserPolicy",
+                "iam:DetachUserPolicy"
+            ],
+            "Resource": "arn:aws:iam::208600120751:policy/*"
+        },
+        {
+            "Sid": "AllowCreateSnsTopic",
+            "Effect": "Allow",
+            "Action": [
+                "sns:CreateTopic",
+                "sns:DeleteTopic"
+            ],
+            "Resource": "arn:aws:sns:eu-west-1:208600120751:*"
+        },
+        {
+            "Sid": "AllowCreateLambdaFunction",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:CreateFunction",
+                "lambda:UpdateFunctionCode",
+                "lambda:DeleteFunction"
+            ],
+            "Resource": "arn:aws:lambda:eu-west-1:208600120751:function:*"
+        }
+    ]
+}

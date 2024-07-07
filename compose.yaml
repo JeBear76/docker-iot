@@ -8,12 +8,35 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  server:
-    build:
-      context: .
+  websocket:
+    container_name: iot-monitor
+    build: ./iot-app
     ports:
       - 8000:8000
 
+  angular:
+    container_name: iot-angular
+    build: ./angular-dist
+    ports:
+      - 80:8080
+
+  ollama:
+    container_name: iot-ollama
+    image: ollama/ollama:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports: 
+      - 11434:11434
+
+networks:
+  default:
+    name: tulip-net
+    external: true
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the
