@@ -23,6 +23,8 @@ services:
   ollama:
     container_name: iot-ollama
     image: ollama/ollama:latest
+    volumes:
+      - ./data/ollama:/root/.ollama
     deploy:
       resources:
         reservations:
@@ -33,7 +35,7 @@ services:
     environment:
       - OLLAMA_KEEP_ALIVE=24h
       - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_ORIGINS=http://iot-monitor:* http://localhost:*
+      - OLLAMA_ORIGINS=http://*
     ports: 
       - 11434:11434
 

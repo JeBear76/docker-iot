@@ -14,5 +14,6 @@ class ollamaConnector:
     def getResponse(self, text):
         try:
             return self.chain.invoke(text)
-        except:
+        except Exception as e:
+            print(e)
             return "I'm sorry, Ollama is broken right now."
