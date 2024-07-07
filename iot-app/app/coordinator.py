@@ -9,13 +9,13 @@ class coordinator:
         _ollama_url = os.getenv('OLLAMA_URL', 'http://localhost:11434')
         self.iotConnection = iot.iot(self)
         self.websocket = socketServer.socketServer(self) 
-        self.ollamaConnector = ollamaConnector(_ollama_url)       
+        self.ollamaChat = ollamaConnector.ollamaConnector(_ollama_url)       
 
     def sendAction(self, data):
         self.iotConnection.send_message('docker-iot-thing-outtopic', data)
 
     def askOllama(self, text):
-        return self.ollamaConnector.get_response(text)
+        return self.ollamaChat.getResponse(text)
     
     def broadcast(self, data):
         self.websocket.broadcast(data)     

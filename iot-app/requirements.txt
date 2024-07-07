@@ -1,3 +1,5 @@
 awsiotsdk
 websockets
-ollama
+langchain
+langchain_community
+asyncio

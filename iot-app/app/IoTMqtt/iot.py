@@ -10,9 +10,9 @@ class iot:
         self.mqtt_connection = mqtt_connection_builder.mtls_from_path(
             endpoint='axpxhkmf6px2p-ats.iot.eu-west-1.amazonaws.com',
             port=None,
-            cert_filepath='../certs/docker-iot-thing.pem.crt',
-            pri_key_filepath='../certs/docker-iot-thing-private.pem.key',
-            ca_filepath='../certs/Amazon-root-CA-1.pem',
+            cert_filepath='./certs/docker-iot-thing.pem.crt',
+            pri_key_filepath='./certs/docker-iot-thing-private.pem.key',
+            ca_filepath='./certs/Amazon-root-CA-1.pem',
             on_connection_interrupted=self.on_connection_interrupted,
             on_connection_resumed=self.on_connection_resumed,
             client_id='docket-iot-thing-1',
