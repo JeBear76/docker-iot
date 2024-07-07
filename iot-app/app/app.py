@@ -15,13 +15,16 @@ connected = list()
 # received_all_event = threading.Event()
 
 # Callback when connection is accidentally lost.
+
+
 def on_connection_interrupted(connection, error, **kwargs):
     print("Connection interrupted. error: {}".format(error))
 
 
 # Callback when an interrupted connection is re-established.
 def on_connection_resumed(connection, return_code, session_present, **kwargs):
-    print("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
+    print("Connection resumed. return_code: {} session_present: {}".format(
+        return_code, session_present))
 
     if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
         print("Session did not persist. Resubscribing to existing topics...")
@@ -44,7 +47,7 @@ def on_resubscribe_complete(resubscribe_future):
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
     reply = "Received message from topic '{}': {}".format(topic, payload)
-    print(reply)    
+    print(reply)
     print(f'Connected: {len(connected)}')
     for conn in connected:
         try:
@@ -53,22 +56,31 @@ def on_message_received(topic, payload, dup, qos, retain, **kwargs):
             asyncio.run(conn.send(reply))
         else:
             loop.run_until_complete(conn.send(reply))
-        
-    #received_all_event.set()
+
+    # received_all_event.set()
 
 # Callback when the connection successfully connects
+
+
 def on_connection_success(connection, callback_data):
     assert isinstance(callback_data, mqtt.OnConnectionSuccessData)
-    print("Connection Successful with return code: {} session present: {}".format(callback_data.return_code, callback_data.session_present))
+    print("Connection Successful with return code: {} session present: {}".format(
+        callback_data.return_code, callback_data.session_present))
 
 # Callback when a connection attempt fails
+
+
 def on_connection_failure(connection, callback_data):
     assert isinstance(callback_data, mqtt.OnConnectionFailureData)
     print("Connection failed with error code: {}".format(callback_data.error))
 
 # Callback when a connection has been disconnected or shutdown successfully
+
+
 def on_connection_closed(connection, callback_data):
+    connected.remove(connection)
     print("Connection closed")
+
 
 def send_message(mqtt_connection, message_topic, message_string):
     message = "{}".format(message_string)
@@ -79,6 +91,8 @@ def send_message(mqtt_connection, message_topic, message_string):
         qos=mqtt.QoS.AT_LEAST_ONCE)
 
 # create handler for each connection
+
+
 async def handler(websocket, path):
     if websocket not in connected:
         connected.append(websocket)
@@ -86,11 +100,32 @@ async def handler(websocket, path):
         try:
             data = await websocket.recv()
         except websockets.ConnectionClosedOK:
-            print ("Connection closed")
-        reply = f"Data recieved as:  {data}!"
+            connected.remove(websocket)
+            print("Connection closed")
+        print(data)
+        reply = f"{data}"
+
+        try:
+            json_data = json.loads(data)
+            # Data is in JSON format
+            # Process the JSON data here
+            if 'op' in json_data:
+                send_message(mqtt_connection, 'docker-iot-thing-outtopic', data)
+                reply = f"Sent message to topic 'docker-iot-thing-outtopic': {data}"
+        except json.JSONDecodeError:
+            pass
+            # Data is not in JSON format
+            # Handle the non-JSON data here
         print(reply)
         for conn in connected:
-            await conn.send(reply)
+            try:
+                if conn == websocket:
+                    await conn.send(f"Me: {reply}")
+                    continue
+                await conn.send(reply)
+            except websockets.exceptions.ConnectionClosedError:
+                pass
+
 
 async def webSocketMain():
     async with websockets.serve(handler, "0.0.0.0", 8000):
@@ -114,9 +149,8 @@ if __name__ == '__main__':
         on_connection_failure=on_connection_failure,
         on_connection_closed=on_connection_closed)
 
-
     print(f"Connecting to 'axpxhkmf6px2p-ats.iot.eu-west-1.amazonaws.com' with client ID 'docket-iot-thing-1'...")
-    
+
     connect_future = mqtt_connection.connect()
 
     # Future.result() waits until a result is available

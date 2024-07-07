@@ -18,7 +18,20 @@ services:
     container_name: iot-angular
     build: ./angular-dist
     ports:
-      - 8080:8080
+      - 80:8080
+
+  ollama:
+    container_name: iot-ollama
+    image: ollama/ollama:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports: 
+      - 11434:11434
 
 networks:
   default:

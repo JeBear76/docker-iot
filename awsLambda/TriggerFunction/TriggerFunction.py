@@ -1,8 +1,6 @@
 import boto3
 
 def lambda_handler(event, context):
-    # Create an SNS client
-    sns_client = boto3.client('sns')
     
     # Define the payload
     payload = [
