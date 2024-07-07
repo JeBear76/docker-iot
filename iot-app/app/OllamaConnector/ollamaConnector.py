@@ -12,4 +12,7 @@ class ollamaConnector:
         self.chain = self.basePrompt | self.llm | StrOutputParser()
 
     def getResponse(self, text):
-        return self.chain.invoke(text)
+        try:
+            return self.chain.invoke(text)
+        except:
+            return "I'm sorry, Ollama is broken right now."
