@@ -35,7 +35,7 @@ class socketServer:
                 # Process the JSON data here
                 if 'op' in json_data:
                     if self.actionObserver is not None:
-                        self.actionObserver.SendAction(data)                    
+                        self.actionObserver.sendAction(data)                    
                     reply = f"Sent message to topic 'docker-iot-thing-outtopic': {data}"
 
             except json.JSONDecodeError:

@@ -7,12 +7,12 @@ class iot:
         self.listenObserver = listenObserver
         
         # Create a MQTT connection from the command line data
-        mqtt_connection = mqtt_connection_builder.mtls_from_path(
+        self.mqtt_connection = mqtt_connection_builder.mtls_from_path(
             endpoint='axpxhkmf6px2p-ats.iot.eu-west-1.amazonaws.com',
             port=None,
-            cert_filepath='./certs/docker-iot-thing.pem.crt',
-            pri_key_filepath='./certs/docker-iot-thing-private.pem.key',
-            ca_filepath='./certs/Amazon-root-CA-1.pem',
+            cert_filepath='../certs/docker-iot-thing.pem.crt',
+            pri_key_filepath='../certs/docker-iot-thing-private.pem.key',
+            ca_filepath='../certs/Amazon-root-CA-1.pem',
             on_connection_interrupted=self.on_connection_interrupted,
             on_connection_resumed=self.on_connection_resumed,
             client_id='docket-iot-thing-1',
@@ -21,11 +21,12 @@ class iot:
             http_proxy_options=None,
             on_connection_success=self.on_connection_success,
             on_connection_failure=self.on_connection_failure,
-            on_connection_closed=self.on_connection_closed)
+            on_connection_closed=self.on_connection_closed)        
 
+    def connectAdSubscribe(self):
         print(f"Connecting to 'axpxhkmf6px2p-ats.iot.eu-west-1.amazonaws.com' with client ID 'docket-iot-thing-1'...")
 
-        connect_future = mqtt_connection.connect()
+        connect_future = self.mqtt_connection.connect()
 
         # Future.result() waits until a result is available
         connect_future.result()
@@ -35,12 +36,13 @@ class iot:
 
         # Subscribe
         print("Subscribing to topic '{}'...".format(self.message_topic))
-        subscribe_future, packet_id = mqtt_connection.subscribe(
+        subscribe_future, _ = self.mqtt_connection.subscribe(
             topic=self.message_topic,
             qos=mqtt.QoS.AT_LEAST_ONCE,
             callback=self.on_message_received)
 
         subscribe_result = subscribe_future.result()
+
         print("Subscribed with {}".format(str(subscribe_result['qos'])))
 
     def on_connection_interrupted(self, connection, error, **kwargs):
@@ -74,7 +76,7 @@ class iot:
     def on_message_received(self, topic, payload, dup, qos, retain, **kwargs):
         reply = "Received message from topic '{}': {}".format(topic, payload)
         print(reply)
-        self.listenObserver.sendMessage(reply)
+        self.listenObserver.broadcast(reply)
 
     def on_connection_success(self, connection, callback_data):
         assert isinstance(callback_data, mqtt.OnConnectionSuccessData)
@@ -89,10 +91,10 @@ class iot:
         print("Connection closed")
 
 
-    def send_message(self, mqtt_connection, message_topic, message_string):
+    def send_message(self, message_topic, message_string):
         message = "{}".format(message_string)
         print("Publishing message to topic '{}': {}".format(message_topic, message))
-        mqtt_connection.publish(
+        self.mqtt_connection.publish(
             topic=message_topic,
             payload=message,
             qos=mqtt.QoS.AT_LEAST_ONCE)

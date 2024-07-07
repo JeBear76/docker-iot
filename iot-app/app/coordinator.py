@@ -1,13 +1,19 @@
+import asyncio
 import IoTMqtt.iot as iot
 import WSServer.sockerServer as socketServer
 
 class coordinator:
     def __init__(self):
-        pass
+        self.iotConnection = iot.iot(self)
+        self.websocket = socketServer.socketServer(self)        
 
-    def sendAction(data):
-        send_message(mqtt_connection, 'docker-iot-thing-outtopic', data)
+    def sendAction(self, data):
+        self.iotConnection.send_message('docker-iot-thing-outtopic', data)
 
-    def sendMessage(data):
-        broadcast(data)     
+    def broadcast(self, data):
+        self.websocket.broadcast(data)     
     
+    def run(self):
+        self.iotConnection.connectAdSubscribe()        
+        asyncio.run(self.websocket.webSocketMain())
+        
