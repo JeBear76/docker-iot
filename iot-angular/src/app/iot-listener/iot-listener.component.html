@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+    Message Reader
+  </mat-toolbar>
+  
+  <mat-card>
+    <div class="message-pane">
+      <div class="message-content">
+        <!-- Add your messages here -->
+        <p *ngFor="let message of messages">{{ message }}</p>
+      </div>
+    </div>
+  </mat-card>
+  
+  <mat-card>
+    <div class="input-area">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Type your message" [(ngModel)]="newMessage">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
+    </div>
+  </mat-card>
+  
