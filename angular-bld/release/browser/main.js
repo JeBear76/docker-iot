@@ -22168,7 +22168,7 @@ function webSocket(urlConfigOrSource) {
 // src/environments/environment.ts
 var environment = {
   production: false,
-  wsUrl: "ws://iot-monitor:8000"
+  wsUrl: "ws://localhost:8000"
 };
 
 // src/app/websocket.service.ts
