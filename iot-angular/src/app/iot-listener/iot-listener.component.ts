@@ -24,6 +24,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './iot-listener.component.css'
 })
 export class IotListenerComponent {
+sendOllamaQuestion() {
+  if (this.newMessage === "") {
+    return;
+  }
+  this.websocketService.subject.next(`{"askOllama":"${this.newMessage}"}`);
+  this.newMessage = "";
+}
   sendAction() {
     this.websocketService.subject.next('{"op":"activate"}');
   }
@@ -44,7 +51,11 @@ export class IotListenerComponent {
   }
 
   sendMessage() {
+    if (this.newMessage === "") {
+      return;
+    }
     this.websocketService.subject.next(this.newMessage);
+    this.newMessage = "";
   }
 
 }
