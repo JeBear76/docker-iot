@@ -22211,6 +22211,13 @@ function IotListenerComponent_p_9_Template(rf, ctx) {
   }
 }
 var _IotListenerComponent = class _IotListenerComponent {
+  sendOllamaQuestion() {
+    if (this.newMessage === "") {
+      return;
+    }
+    this.websocketService.subject.next(`{"askOllama":"${this.newMessage}"}`);
+    this.newMessage = "";
+  }
   sendAction() {
     this.websocketService.subject.next('{"op":"activate"}');
   }
@@ -22228,7 +22235,11 @@ var _IotListenerComponent = class _IotListenerComponent {
     });
   }
   sendMessage() {
+    if (this.newMessage === "") {
+      return;
+    }
     this.websocketService.subject.next(this.newMessage);
+    this.newMessage = "";
   }
 };
 _IotListenerComponent.\u0275fac = function IotListenerComponent_Factory(t) {
