@@ -41,6 +41,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 USER appuser
 
+ENV OLLAMA_URL='http://iot-ollama:11434'
+
 WORKDIR /app/certs
 COPY --chmod=777 ./certs .
 
