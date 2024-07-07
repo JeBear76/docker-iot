@@ -16,7 +16,7 @@ services:
 
   angular:
     container_name: iot-angular
-    build: ./angular-dist
+    build: ./angular-bld
     ports:
       - 80:8080
 
