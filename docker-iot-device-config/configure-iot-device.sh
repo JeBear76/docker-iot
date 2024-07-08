@@ -27,3 +27,9 @@ aws iot create-policy \
     --no-cli-pager \
     --policy-name "docker-iot-thing-policy" \
     --policy-document "file://./docker-iot-device-config/policy.json"
+
+aws iot attach-policy \
+    --profile iot-user \
+    --no-cli-pager \
+    --policy-name "docker-iot-thing-policy" \
+    --target $CERTIFICATE_ARN
