@@ -6,6 +6,7 @@ CURRENT_DIR=$(pwd)
 aws iam delete-role-policy \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --role-name LambdaIotFunctionRole \
     --policy-name LambdaIotFunctionPolicy
     
@@ -13,12 +14,14 @@ aws iam delete-role-policy \
 aws iam delete-role \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --role-name LambdaIotFunctionRole
 
 # Create an IAM role if it doesn't exist
 aws iam create-role \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --role-name LambdaIotFunctionRole \
     --assume-role-policy-document file://awsLambda/policies/lambda-trust-policy.json
 
@@ -27,15 +30,10 @@ aws iam create-role \
 aws iam put-role-policy \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --role-name LambdaIotFunctionRole \
     --policy-name LambdaIotFunctionPolicy \
     --policy-document file://awsLambda/policies/lambdaRole.json
-
-# Create an SNS topic called iotTrigger
-aws sns create-topic \
-    --profile iot-backend-deployment-user \
-    --no-cli-pager \
-    --name iotTrigger
 
 # Create a package folder in the TriggerFunction folder
 mkdir -p ./awsLambda/TriggerFunction/package
@@ -53,19 +51,19 @@ cd $CURRENT_DIR
 aws lambda delete-function \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --function-name IotTriggerFunction \
-    --region eu-west-1
 
 # Upload the function to AWS (replace <function_name> and <bucket_name> with your own values)
 aws lambda create-function \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --function-name IotTriggerFunction \
     --runtime python3.12 \
     --role arn:aws:iam::208600120751:role/LambdaIotFunctionRole \
     --handler TriggerFunction.lambda_handler \
     --zip-file fileb://awsLambda/function.zip \
-    --region eu-west-1 \
     --timeout 30 \
     --memory-size 128 \
     --publish
@@ -90,18 +88,18 @@ cd $CURRENT_DIR
 aws lambda delete-function \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --function-name IotActionFunction \
-    --region eu-west-1
 
 aws lambda create-function \
     --profile iot-backend-deployment-user \
     --no-cli-pager \
+    --region eu-west-1 \
     --function-name IotActionFunction \
     --runtime python3.12 \
     --role arn:aws:iam::208600120751:role/LambdaIotFunctionRole \
     --handler ActionFunction.lambda_handler \
     --zip-file fileb://awsLambda/function.zip \
-    --region eu-west-1 \
     --timeout 30 \
     --memory-size 128 \
     --publish

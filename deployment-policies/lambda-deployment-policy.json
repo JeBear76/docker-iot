@@ -29,15 +29,6 @@
             "Resource": "arn:aws:iam::208600120751:policy/*"
         },
         {
-            "Sid": "AllowCreateSnsTopic",
-            "Effect": "Allow",
-            "Action": [
-                "sns:CreateTopic",
-                "sns:DeleteTopic"
-            ],
-            "Resource": "arn:aws:sns:eu-west-1:208600120751:*"
-        },
-        {
             "Sid": "AllowCreateLambdaFunction",
             "Effect": "Allow",
             "Action": [

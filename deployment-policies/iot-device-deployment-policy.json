@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iot:CreateThing",
+                "iot:CreateKeysAndCertificate",
+                "iot:AttachThingPrincipal",
+                "iot:UpdateThingShadow",
+                "iot:Publish",
+                "iot:Subscribe",
+                "iot:Receive",
+                "iot:DeleteThing",
+                "iot:DetachThingPrincipal",
+                "iot:DeleteCertificate",
+				"iot:CreatePolicy",
+				"iot:AttachPolicy",
+                "iot:DeletePolicy",
+                "iot:DeleteThingShadow"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

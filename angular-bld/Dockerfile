@@ -7,10 +7,9 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./release/browser /usr/share/nginx/html
 
 # Run the application as a non-root user.
-WORKDIR /certs
-COPY --chmod=777 ./certs .
+WORKDIR /etc/ssl/certs
 
 EXPOSE 8080
+EXPOSE 4443
 
-# CMD ls -la /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
