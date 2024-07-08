@@ -7,23 +7,7 @@
 ### Basic Thing Setup
 
 ```
-mkdir ./iot-app/certs
-
-curl -o ./iot-app/certs/Amazon-root-CA-1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem 
-
-aws iot create-keys-and-certificate \
-    --set-as-active \
-    --certificate-pem-outfile "./iot-app/certs/device.pem.crt" \
-    --public-key-outfile "./iot-app/certs/public.pem.key" \
-    --private-key-outfile "./iot-app/certs/private.pem.key"
-
-aws iot attach-thing-principal \
-    --thing-name "MyIotThing" \
-    --principal "certificateArn"
-
-aws iot create-policy \
-    --policy-name "MyIotThingPolicy" \
-    --policy-document "file://./docker-iot-device-config/policy.json"
+mkdir ~/certs
 ```
 
 ## Docker setup
@@ -32,3 +16,7 @@ docker network create tulip-net
 ```
 
 ## Angular Setup
+
+```
+openssl req -x509 -newkey rsa:4096 -keyout ~/cerst/static-key.pem -out ~/certs/static-cert.pem -sha256 -days 3650 -nodes -subj "/C=ZA/ST=Western Cape/L=Cape Town/O=RobotMaker/OU=R&D/CN=Jebear76"
+```
