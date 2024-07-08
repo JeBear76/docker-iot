@@ -61,7 +61,7 @@ aws lambda create-function \
     --region eu-west-1 \
     --function-name IotTriggerFunction \
     --runtime python3.12 \
-    --role arn:aws:iam::208600120751:role/LambdaIotFunctionRole \
+    --role arn:aws:iam::<YOUR_ACCOUNT>:role/LambdaIotFunctionRole \
     --handler TriggerFunction.lambda_handler \
     --zip-file fileb://awsLambda/function.zip \
     --timeout 30 \
@@ -97,7 +97,7 @@ aws lambda create-function \
     --region eu-west-1 \
     --function-name IotActionFunction \
     --runtime python3.12 \
-    --role arn:aws:iam::208600120751:role/LambdaIotFunctionRole \
+    --role arn:aws:iam::<YOUR_ACCOUNT>:role/LambdaIotFunctionRole \
     --handler ActionFunction.lambda_handler \
     --zip-file fileb://awsLambda/function.zip \
     --timeout 30 \
