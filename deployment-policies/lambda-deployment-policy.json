@@ -14,7 +14,7 @@
                 "iam:DeleteRolePolicy",
                 "iam:PassRole"
             ],
-            "Resource": "arn:aws:iam::208600120751:role/*"
+            "Resource": "arn:aws:iam::<YOUR_ACCOUNT>:role/*"
         },
         {
             "Sid": "AllowCreatePolicy",
@@ -26,7 +26,7 @@
                 "iam:AttachUserPolicy",
                 "iam:DetachUserPolicy"
             ],
-            "Resource": "arn:aws:iam::208600120751:policy/*"
+            "Resource": "arn:aws:iam::<YOUR_ACCOUNT>:policy/*"
         },
         {
             "Sid": "AllowCreateLambdaFunction",
@@ -36,7 +36,7 @@
                 "lambda:UpdateFunctionCode",
                 "lambda:DeleteFunction"
             ],
-            "Resource": "arn:aws:lambda:eu-west-1:208600120751:function:*"
+            "Resource": "arn:aws:lambda:eu-west-1:<YOUR_ACCOUNT>:function:*"
         }
     ]
 }
