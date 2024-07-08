@@ -10,6 +10,11 @@
 This project requires [Docker Desktop](https://www.docker.com/products/docker-desktop/)  
 On Windows, you'll also need to run it it Ubuntu WSL2 because all the scripts are bash scripts.  
 
+**Start by running**
+```
+. ./configure-aws-account.sh
+```
+
 ## Security goodness
 Save the necessary certificate and keys in a folder outside of this solution.  
 The default locations in the scripts is **~/certs**  
