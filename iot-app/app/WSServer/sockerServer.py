@@ -40,6 +40,8 @@ class socketServer:
                 if 'askOllama' in json_data:
                     if self.actionObserver is not None:
                         reply = self.actionObserver.askOllama(json_data['askOllama'])
+                        await conn.send(f"Ollama: {reply}")
+                        return
                     else:
                         reply = "Ollama is not available"
 
