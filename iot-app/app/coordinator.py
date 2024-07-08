@@ -18,7 +18,7 @@ class coordinator:
         return self.ollamaChat.getResponse(text)
     
     def broadcast(self, data):
-        self.websocket.broadcast(data)     
+        asyncio.run(self.websocket.broadcast(data))   
     
     def run(self):
         self.iotConnection.connectAdSubscribe()        
