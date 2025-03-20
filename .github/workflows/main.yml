@@ -11,7 +11,7 @@ jobs:
       env:
         GITHUB_RUN_NUMBER: ${{ github.run_number }}
       run: 
-        $VERSION_CODE = $GITHUB_RUN_NUMBER + 20 >> $GITHUB_ENV
+        $VERSION_CODE=$($GITHUB_RUN_NUMBER + 20) >> $env:GITHUB_ENV
 
     - name: view versionCode
       run: echo ${{ env.VERSION_CODE }}
