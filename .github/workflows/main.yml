@@ -10,7 +10,7 @@ jobs:
     - name: Generate versionCode
       env:
         GITHUB_RUN_NUMBER: ${{ github.run_number }}
-      run: 
+      run: |
         $VERSION_CODE=$($GITHUB_RUN_NUMBER + 20)
         echo "VERSION_CODE=$VERSION_CODE >> $env:GITHUB_ENV
 
