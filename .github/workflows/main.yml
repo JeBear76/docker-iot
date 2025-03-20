@@ -2,14 +2,15 @@ name: mini workflow
 
 on:
   workflow_dispatch
-
+env:
+  VERSION_CODE_OFFSET: 20
 jobs:
   make-version:
     runs-on: windows-latest
     steps:
     - name: Generate versionCode
       run: |
-        $VERSION_CODE=$(${{ github.run_number }} + 20)
+        $VERSION_CODE=$(${{ github.run_number }} + ${{ env.VERSION_CODE_OFFSET }})
         echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
 
     - name: view versionCode
