@@ -1,0 +1,18 @@
+name: mini workflow
+
+on:
+  workflow_dispatch
+
+jobs:
+  make-version:
+    runs-on: windows-latest
+    steps:
+    - name: Generate versionCode
+      env:
+        GITHUB_RUN_NUMBER: ${{ github.run_number }}
+      run: 
+        $VERSION_CODE = $GITHUB_RUN_NUMBER + 20 >> $GITHUB_ENV
+
+    - name: view versionCode
+      run: echo ${{ env.VERSION_CODE }}
+  
