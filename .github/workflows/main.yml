@@ -8,10 +8,8 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Generate versionCode
-      env:
-        GITHUB_RUN_NUMBER: ${{ github.run_number }}
       run: |
-        $VERSION_CODE=$($GITHUB_RUN_NUMBER + 20)
+        $VERSION_CODE=$(${{ github.run_number }} + 20)
         echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
 
     - name: view versionCode
