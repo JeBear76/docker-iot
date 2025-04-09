@@ -1,18 +1,41 @@
 name: mini workflow
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      IsProd:
+          type: boolean
+          required: true      
+          
 env:
   VERSION_CODE_OFFSET: 20
 jobs:
-  make-version:
-    runs-on: windows-latest
+  do-thing:
+    runs-on: ubuntu-latest
     steps:
-    - name: Generate versionCode
+    - name: Step 1
       run: |
-        $VERSION_CODE=$(${{ github.run_number }} + ${{ env.VERSION_CODE_OFFSET }})
+        $VERSION_CODE=1
         echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
 
+    - name: view versionCode
+      run: echo ${{ env.VERSION_CODE }}
+      
+  conditional-do-thing:
+    if: inputs.IsProd == true
+    runs-on: ubuntu-latest
+    steps:
+    - name: Step 1
+      run: |
+        $VERSION_CODE=$(${{ github.run_number }} + ${{ env.VERSION_CODE }})
+        echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
+
+    - name: view versionCode
+      run: echo ${{ env.VERSION_CODE }}
+      
+  do-thing-two:
+    runs-on: ubuntu-latest
+    steps:      
     - name: view versionCode
       run: echo ${{ env.VERSION_CODE }}
   
