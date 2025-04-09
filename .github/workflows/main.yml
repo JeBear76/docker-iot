@@ -18,22 +18,15 @@ jobs:
 
     - name: view versionCode
       run: cat ./test
-      
-  conditional-do-thing:
-    if: inputs.IsProd == true
-    runs-on: ubuntu-latest
-    steps:
-    - name: Step 1
+    
+    - name: Step 3
       run: |
-        VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
-        echo "VERSION_CODE=$VERSION_CODE" >> ./test
+        if [ ${{ inputs.IsProd }} ]; then
+          VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
+          echo "VERSION_CODE=$VERSION_CODE" >> ./test
+        fi
 
     - name: view versionCode
       run: cat ./test
       
-  do-thing-two:
-    runs-on: ubuntu-latest
-    steps:      
-    - name: view versionCode
-      run: cat ./test
   
