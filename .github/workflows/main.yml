@@ -1,4 +1,4 @@
-name: mini workflow
+name: mini workflow renamed
 
 on:
   workflow_dispatch:
