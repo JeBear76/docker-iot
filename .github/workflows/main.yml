@@ -21,10 +21,13 @@ jobs:
       run: |
         if [ ${{ inputs.IsProd }} = true ]; then
           VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
-          echo $VERSION_CODE >> ./test
+          echo $VERSION_CODE > ./test
+          echo "VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
         fi
 
     - name: view versionCode
-      run: cat ./test
+      run: |
+        cat ./test
+        echo $VERSION_CODE
       
   
