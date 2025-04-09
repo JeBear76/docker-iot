@@ -14,10 +14,10 @@ jobs:
     - name: Step 1
       run: |
         VERSION_CODE=1
-        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+        echo "VERSION_CODE=$VERSION_CODE" >> ./test
 
     - name: view versionCode
-      run: echo $VERSION_CODE
+      run: cat ./test
       
   conditional-do-thing:
     if: inputs.IsProd == true
@@ -26,14 +26,14 @@ jobs:
     - name: Step 1
       run: |
         VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
-        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+        echo "VERSION_CODE=$VERSION_CODE" >> ./test
 
     - name: view versionCode
-      run: echo $VERSION_CODE
+      run: cat ./test
       
   do-thing-two:
     runs-on: ubuntu-latest
     steps:      
     - name: view versionCode
-      run: echo $VERSION_CODE
+      run: cat ./test
   
