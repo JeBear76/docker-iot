@@ -35,5 +35,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:      
     - name: view versionCode
-      run: echo ${{ env.VERSION_CODE }}
+      run: echo $VERSION_CODE
   
