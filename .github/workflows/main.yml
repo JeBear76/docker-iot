@@ -7,19 +7,17 @@ on:
           type: boolean
           required: true      
           
-env:
-  VERSION_CODE_OFFSET: 20
 jobs:
   do-thing:
     runs-on: ubuntu-latest
     steps:
     - name: Step 1
       run: |
-        $VERSION_CODE=1
-        echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
+        VERSION_CODE=1
+        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
     - name: view versionCode
-      run: echo ${{ env.VERSION_CODE }}
+      run: echo $VERSION_CODE
       
   conditional-do-thing:
     if: inputs.IsProd == true
@@ -27,11 +25,11 @@ jobs:
     steps:
     - name: Step 1
       run: |
-        $VERSION_CODE=$(${{ github.run_number }} + ${{ env.VERSION_CODE }})
-        echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
+        VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
+        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
     - name: view versionCode
-      run: echo ${{ env.VERSION_CODE }}
+      run: echo $VERSION_CODE
       
   do-thing-two:
     runs-on: ubuntu-latest
