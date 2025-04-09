@@ -1,18 +1,30 @@
-name: mini workflow
+name: mini workflow renamed
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      IsProd:
+          type: boolean
+          required: true      
 env:
-  VERSION_CODE_OFFSET: 20
+  VERSION_CODE: 1
+  
 jobs:
-  make-version:
-    runs-on: windows-latest
+  do-thing:
+    runs-on: ubuntu-latest
     steps:
-    - name: Generate versionCode
+    - name: Step 1
       run: |
-        $VERSION_CODE=$(${{ github.run_number }} + ${{ env.VERSION_CODE_OFFSET }})
-        echo "VERSION_CODE=$VERSION_CODE" >> $env:GITHUB_ENV
+        echo $VERSION_CODE >> ./test
+    
+    - name: conditonal
+      run: |
+        if [ ${{ inputs.IsProd }} = true ]; then
+          VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
+          echo $VERSION_CODE >> ./test
+        fi
 
     - name: view versionCode
-      run: echo ${{ env.VERSION_CODE }}
+      run: cat ./test
+      
   
