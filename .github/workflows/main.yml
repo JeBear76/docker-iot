@@ -6,24 +6,22 @@ on:
       IsProd:
           type: boolean
           required: true      
-          
+env:
+  VERSION_CODE: 1
+  
 jobs:
   do-thing:
     runs-on: ubuntu-latest
     steps:
     - name: Step 1
       run: |
-        VERSION_CODE=1
-        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
-
-    - name: view versionCode
-      run: cat ./test
+        echo $VERSION_CODE >> ./test
     
-    - name: Step 3
+    - name: conditonal
       run: |
         if [ ${{ inputs.IsProd }} = true ]; then
           VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
-          echo "VERSION_CODE=$VERSION_CODE" >> ./test
+          echo $VERSION_CODE >> ./test
         fi
 
     - name: view versionCode
