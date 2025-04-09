@@ -14,14 +14,14 @@ jobs:
     - name: Step 1
       run: |
         VERSION_CODE=1
-        echo "VERSION_CODE=$VERSION_CODE" >> ./test
+        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
     - name: view versionCode
       run: cat ./test
     
     - name: Step 3
       run: |
-        if [ ${{ inputs.IsProd }} ]; then
+        if [ ${{ inputs.IsProd }} = true ]; then
           VERSION_CODE=$((${{ github.run_number }} + ${{ env.VERSION_CODE }}))
           echo "VERSION_CODE=$VERSION_CODE" >> ./test
         fi
